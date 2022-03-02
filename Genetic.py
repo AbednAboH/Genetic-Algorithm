@@ -10,6 +10,7 @@ import math
 import random
 from datetime import datetime
 import secrets
+import numpy as np
 #tod: look into numpy array to replace buffer + compare with original code that resizes buffer !!!
 from ctypes import CDLL
 RAND_MAX=0x7fff
@@ -40,8 +41,8 @@ class Ga_struct():
 
 
 def init_population():
-    population = []
-    buffer = {}
+    population = list(range(GA_POPSIZE))
+    buffer =list(range(GA_POPSIZE))
     tsize = len(GA_TARGET)
 
     for i in range(GA_POPSIZE):
@@ -49,7 +50,7 @@ def init_population():
         for j in range(tsize):
             k= chr((random.randint(0,90))+32)
             citizen.string += k
-        population.append(citizen)
+        population[i]=citizen
         # print(citizen.string)
     # print("---------------------------------------------------------------------------------------")
     return population, buffer
@@ -71,8 +72,8 @@ def calc_fitness(population):
     print(minim)
 
 def sort_by_fitness(population):
-    sorted(population,reverse=True)
-
+    # sorted(population,reverse=True)
+    population.sort()
 
 def elitism(population, buffer, esize):
     for i in range(esize):
@@ -122,7 +123,7 @@ def main():
         calc_fitness(population)  # // calculate fitness
         #sort_by_fitness(population)  # // sort them
         # print(population[0]<population[1])
-        sorted(population)
+        sort_by_fitness(population)
         print("best",population[0].string)
         print_best(population)  # // print the best one
 
