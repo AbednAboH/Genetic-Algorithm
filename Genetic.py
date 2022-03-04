@@ -6,19 +6,20 @@ import numpy as np
 import time
 from ctypes import CDLL
 from create_problem_sets import DNA
+
 RAND_MAX = 0x7fff
-# libc = CDLL(name="libc.so.6")
-GA_POPSIZE = 2048  # ga population size
-GA_MAXITER = 16384  # // maximum iterations
-GA_ELITRATE = 0.10  # // elitism rate
-GA_MUTATIONRATE = 0.25  # // mutation rate
+
+GA_POPSIZE = 2048
+GA_MAXITER = 16384
+GA_ELITRATE = 0.10
+GA_MUTATIONRATE = 0.25
 GA_MUTATION = RAND_MAX * GA_MUTATIONRATE
 GA_TARGET = "Hello world!"
 TAR_size = len(GA_TARGET)
-# GA_TARGET = "HI !"
-
 """ class for our population has a string and a fitness value"""
 
+
+# will be removed !!!!
 
 class Ga_struct():
     def __init__(self):
@@ -39,7 +40,7 @@ class Ga_struct():
 
 
 class genetic_algorithem:
-    def __init__(self, target, tar_size,pop_size, problem_spec):
+    def __init__(self, target, tar_size, pop_size, problem_spec):
         self.population = list(range(pop_size))
         self.buffer = list(range(pop_size))
         self.target = target
@@ -47,9 +48,11 @@ class genetic_algorithem:
         self.pop_size = pop_size
         self.pop_mean = 0
         self.iteration = 0  # current iteration that went through the algorithem
-        self.prob_spec=problem_spec
+        self.prob_spec = problem_spec
+        self.file = open(r"C:\Users\freaz\Desktop\university\ai_Lab_1\pres.txt", "w+")
 
     def init_population(self, pop_size, target_size):
+
         for i in range(pop_size):
             citizen = self.prob_spec()
             citizen.create_object(target_size)
@@ -61,8 +64,9 @@ class genetic_algorithem:
     def calc_fitness(self):
         mean = 0
         for i in range(self.pop_size):
-            self.population[i].calculate_fittness(self.target,self.target_size)
+            self.population[i].calculate_fittness(self.target, self.target_size)
             mean += self.population[i].fitness
+
         self.pop_mean = mean / self.pop_size
 
     def sort_by_fitness(self):
@@ -73,7 +77,7 @@ class genetic_algorithem:
             self.buffer[i] = self.population[i]
 
     def mutate(self, member):
-        member.mutate(self.target_size,member)
+        member.mutate(self.target_size, member)
 
     def mate(self, cross_type):
         esize = math.floor(self.pop_size * GA_ELITRATE)
@@ -91,17 +95,34 @@ class genetic_algorithem:
             if (secrets.randbelow(122) < GA_MUTATION):
                 self.mutate(self.buffer[i])
 
-    def solve_genetic_problem(self):
 
+    def get_levels_fitness(self):
+        arr={}
+        for i in self.population:
+            if i.fitness in arr.keys():
+                arr[i.fitness]+=1
+            else:
+                arr[i.fitness]=1
+        for i in arr.keys():
+            self.file.write(str(i)+" "+str(arr[i])+"\n")
+
+
+    def solve_genetic_problem(self):
         tick = time.time()
         sol_time = time.perf_counter()
         # random.seed(datetime.now())
         self.init_population(self.pop_size, self.target_size)
         for i in range(GA_MAXITER):
+            self.file.write("i" +str(self.iteration)+"\n")
+
+            self.iteration += 1
 
             self.calc_fitness()  # // calculate fitness
 
             self.sort_by_fitness()
+
+            self.get_levels_fitness()
+
             runtime = time.perf_counter() - sol_time
             clockticks = time.time() - tick
             print_B(self.population)
@@ -112,6 +133,7 @@ class genetic_algorithem:
             self.mate(0)  # // mate the population together
 
             self.population, self.buffer = self.buffer, self.population  # // swap buffers
+        self.file.close()
         return 0
 
 
@@ -133,7 +155,7 @@ variance = lambda x: math.sqrt((x[0] - x[1]) ** 2)
 
 def main():
     overall_time = time.perf_counter()
-    GA = genetic_algorithem(GA_TARGET, TAR_size, GA_POPSIZE,DNA)
+    GA = genetic_algorithem(GA_TARGET, TAR_size, GA_POPSIZE, DNA)
     GA.solve_genetic_problem()
     overall_time = time.perf_counter() - overall_time
 
