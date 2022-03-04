@@ -21,15 +21,16 @@ GA_ELITRATE = 0.10  # // elitism rate
 GA_MUTATIONRATE = 0.25  # // mutation rate
 GA_MUTATION = RAND_MAX * GA_MUTATIONRATE
 GA_TARGET = "Hello world!"
+TAR_size=len(GA_TARGET)
 #GA_TARGET = "HI !"
+
+""" class for our population has a string and a fitness value"""
 
 
 class Ga_struct():
     def __init__(self):
         self.string = ""
         self.fitness = 0
-        # self.fitness = -1
-        # self.fitness = self.fitness + 2 ** 32
 
     def __lt__(self, other):
         return self.fitness < other.fitness
@@ -40,98 +41,129 @@ class Ga_struct():
 
 
 
-def init_population():
-    population = list(range(GA_POPSIZE))
-    buffer =list(range(GA_POPSIZE))
-    tsize = len(GA_TARGET)
-
-    for i in range(GA_POPSIZE):
-        citizen = Ga_struct()
-        for j in range(tsize):
-            k= chr((random.randint(0,90))+32)
-            citizen.string += k
-        population[i]=citizen
-        # print(citizen.string)
-    # print("---------------------------------------------------------------------------------------")
-    return population, buffer
+""" to generalize the problem we created a class that given a population calculates the solution"""
 
 
-def calc_fitness(population):
-    target = GA_TARGET
-    tsize = len(target)
-    fitness=0
-    minim=50000
-    for i in range(GA_POPSIZE):
-        fitness = 0
-        for j in range(tsize):
-            fit = ord(population[i].string[j])-ord(target[j])
-            fitness += abs(fit)
+class genetic_algorithem:
+    def __init__(self,target,tar_size,pop_size):
+        self.population = list(range(pop_size))
+        self.buffer = list(range(pop_size))
+        self.target=target
+        self.target_size=tar_size
+        self.pop_size=pop_size
+        self.pop_mean=0
+    def init_population(self,pop_size,target_size):
+        for i in range(pop_size):
+            citizen = Ga_struct()
+            for j in range(target_size):
+                citizen.string += chr((random.randint(0,90))+32)
+            self.population[i]=citizen
 
-        population[i].fitness = fitness
-        minim=min(minim,fitness)
-    print(minim)
+# this function calculates fittness for all the population and it's mean value and returns it """
 
-def sort_by_fitness(population):
-    # sorted(population,reverse=True)
-    population.sort()
-
-def elitism(population, buffer, esize):
-    for i in range(esize):
-        buffer[i]=population[i]
-
-def mutate(member):
-    tsize = len(GA_TARGET)-1
-    ipos = random.randint(0, tsize)
-    delta = random.randint(0,90) + 32
-    # print("ipos",ipos,"     s",member.string)
-    member.string.replace(member.string[ipos], chr((ord(member.string[ipos]) + delta) % 122))
+    def calc_fitness(self):
 
 
-def mate(population, buffer):
-    esize =  math.floor(GA_POPSIZE * GA_ELITRATE)
-    tsize = len(GA_TARGET)
-    elitism(population, buffer, esize)
-    # print(esize, " ",tsize, " ")
-
-    for i in range(GA_POPSIZE):
-        i1 = random.randint(0,GA_POPSIZE // 2)
-        i2 = random.randint(0,GA_POPSIZE // 2)
-        spos = random.randint(0, tsize)
-        buffer[i]=Ga_struct()
-        buffer[i].string = population[i1].string[0:spos] + population[i2].string[spos:]
-        if (secrets.randbelow(122)< GA_MUTATION):
-            mutate(buffer[i])
+        """mean of all fittness values"""
 
 
-def print_best(gav):
-    print("Best: " + gav[0].string + " (" + str(gav[0].fitness) + ")")
+        mean=0
+        for i in range(self.pop_size):
+            fitness = 0
+            for j in range(self.target_size):
+                fit = ord(self.population[i].string[j])-ord(self.target[j])
+                fitness += abs(fit)
+
+            self.population[i].fitness = fitness
+            # minim=min(minim,fitness)  ## debug purposes
+            mean+=fitness
+        self.pop_mean=mean/self.pop_size
+
+    def sort_by_fitness(self):
+        self.population.sort()
+
+    def elitism(self, esize):
+        for i in range(self.pop_size):
+            self.buffer[i]=self.population[i]
+
+    def mutate(self,member):
+        ipos = random.randint(0, self.target_size-1)
+        delta = random.randint(0,90) + 32
+        member.string.replace(member.string[ipos], chr((ord(member.string[ipos]) + delta) % 122))
+
+    def mate(self,cross_type):
+        esize =  math.floor(self.pop_size * GA_ELITRATE)
+        self.elitism(esize)
+        self.cross(cross_type)
+
+    def cross(self,cross_type):
+        for i in range(self.pop_size):
+            i1 = random.randint(0,GA_POPSIZE // 2)
+            i2 = random.randint(0,GA_POPSIZE // 2)
+            spos = random.randint(0, self.target_size)
+            self.buffer[i]=Ga_struct()
+            self.buffer[i].string = self.population[i1].string[0:spos] + self.population[i2].string[spos:]
+            if (secrets.randbelow(122)< GA_MUTATION):
+                self.mutate(self.buffer[i])
+
+    def solve_genetic_problem(self):
+        random.seed(datetime.now())
+        self.init_population(self.pop_size, self.target_size)
+        # for i in self.population:
+        #     print(i.string)
+        for i in range(GA_MAXITER):
+
+            self.calc_fitness()  # // calculate fitness
+
+            self.sort_by_fitness()
+
+            print_B(self.population)
+
+            print_mean_var((self.pop_mean, variance((self.pop_mean, self.population[0].fitness))))
+
+            if (self.population)[0].fitness == 0: break;
+
+            self.mate(0)  # // mate the population together
+
+            self.population, self.buffer = self.buffer, self.population  # // swap buffers
+        return 0
+
+"""inline functions"""
 
 
-#def swap(population):
+""" that prints the best candidate """
+print_B=lambda x:print("Best: " + x[0].string + " (" + str(x[0].fitness) + ")",end=" ")
+""" that prints the best candidate """
+print_mean_var=lambda x: print("Mean : " + str(x[0]) + " Variance " + str(x[1]))
 
+variance = lambda  x: math.sqrt((x[0]-x[1])**2)
 
 # no need !!!!!
 
 
 def main():
+    GA = genetic_algorithem(GA_TARGET,TAR_size,GA_POPSIZE)
+    GA.solve_genetic_problem()
     # t2odo : figure this stuff up libc.srand(unsigned(time(NULL)))
-    random.seed(datetime.now())
-    population, buffer = init_population()
-    for i in population:
-        print(i.string)
-    for i in range(GA_MAXITER):
-        calc_fitness(population)  # // calculate fitness
-        #sort_by_fitness(population)  # // sort them
-        # print(population[0]<population[1])
-        sort_by_fitness(population)
-        print("best",population[0].string)
-        print_best(population)  # // print the best one
-
-        if (population)[0].fitness == 0: break;
-
-        mate(population, buffer)  # // mate the population together
-        population, buffer = buffer , population  # // swap buffers
-    return 0
+    # random.seed(datetime.now())
+    # population, buffer = init_population()
+    # for i in population:
+    #     print(i.string)
+    # for i in range(GA_MAXITER):
+    #     mean=calc_fitness(population)  # // calculate fitness
+    #     #sort_by_fitness(population)  # // sort them
+    #     # print(population[0]<population[1])
+    #     sort_by_fitness(population)
+    #
+    #     print_B(population)
+    #
+    #     print_mean_var((mean,variance((mean,population[0].fitness))))
+    #
+    #     if (population)[0].fitness == 0: break;
+    #
+    #     mate(population, buffer)  # // mate the population together
+    #     population, buffer = buffer , population  # // swap buffers
+    # return 0
 
 if __name__ == "__main__":
     main()
