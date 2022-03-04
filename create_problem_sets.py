@@ -4,6 +4,7 @@ import random
 # basic class for all problem sets because fittness and the member of the population are problem specific
 # and we have to eliminate problem specifc parameters from the Genetic algorithem
 # might add mutate !
+
 class parameters:
     def __init__(self):
         self.object = None
