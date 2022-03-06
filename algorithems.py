@@ -10,7 +10,7 @@ GA_MAXITER = 16384
 GA_ELITRATE = 0.10
 GA_MUTATIONRATE = 0.25
 GA_MUTATION = RAND_MAX * GA_MUTATIONRATE
-GA_TARGET = "you are my sunshine!"
+GA_TARGET = "hello"
 TAR_size = len(GA_TARGET)
 
 
@@ -28,6 +28,7 @@ class algortithem:
         self.fitnesstype=fitnesstype
         self.tick=0
         self.sol_time=0
+        self.solution=problem_spec()
 
     def init_population(self, pop_size, target_size):
         for i in range(pop_size):
@@ -35,6 +36,7 @@ class algortithem:
             citizen.create_object(target_size)
             citizen.calculate_fittness(self.target, target_size, self.fitnesstype)
             self.population[i] = citizen
+
     def calc_fitness(self):
         mean = 0
         for i in range(self.pop_size):
@@ -63,12 +65,15 @@ class algortithem:
     def handle_prints_time(self):
         runtime = time.perf_counter() - self.sol_time
         clockticks = time.time() - self.tick
-        print_B(self.population)
+        print_B(self.solution)
         print_mean_var((self.pop_mean, variance((self.pop_mean, self.population[0].fitness))))
         print_time((runtime, clockticks))
 
     def algo(self,i):
         pass
+
+    def stopage(self):
+        return  self.population[0].fitness == 0
 
     def solve(self):
         self.handle_initial_time()
@@ -81,15 +86,17 @@ class algortithem:
             self.iteration += 1
 
             self.algo(i)
+
             self.get_levels_fitness()
             self.handle_prints_time()
-            if (self.population)[0].fitness == 0: break
+            if self.stopage():
+                break
 
 
         self.file.close()
         return 0
 
-print_B = lambda x: print(f" Best: {x[0].object} ,fittness: {x[0].fitness} ", end=" ")
+print_B = lambda x: print(f" Best: {x.object} ,fittness: {x.fitness} ", end=" ")
 
 #  prints mean and variance
 print_mean_var = lambda x: print(f"Mean: {x[0]} ,Variance: {x[1]}", end=" ")

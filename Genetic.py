@@ -67,7 +67,7 @@ def main():
     fitness_func=int(input("pick fitness"))
     print(fitness_func)
     overall_time = time.perf_counter()
-    # GA = genetic_algorithem(GA_TARGET, TAR_size, GA_POPSIZE, DNA, 2,fitness_func)
+    # GA = genetic_algorithem(GA_TARGET, TAR_size, GA_POPSIZE, DNA, 1,fitness_func)
     # GA.solve()
     GA = PSO_alg(GA_TARGET, TAR_size, GA_POPSIZE,PSO_prb, fitness_func)
     GA.solve()

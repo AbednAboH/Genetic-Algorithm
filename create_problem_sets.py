@@ -18,7 +18,7 @@ class fitness_selector:
     def bul_pqia(self, object, target, target_size):
         fitness = 0
         for i in range(target_size):
-            if object[i] != target[i]:
+            if ord(object[i]) != ord(target[i]):
                 fitness += PENALTY if object[i] in target else HIGH_PENALTY
         return fitness
     ## fitness for pso
@@ -88,14 +88,15 @@ class PSO_prb(DNA):
     def calculate_new_position(self):
         pos = ""
         for i in range(len(self.object)):
-            pos += chr((ord(self.object[i]) + int(self.velocity[i])) % 90+32)
+            pos += chr((ord(self.object[i]) + int(self.velocity[i])) % 256)
         self.object = pos
 
     def calculate_velocity(self, c1, c2, gl_best, w=0.5):
         for i in range(len(self.object)):
-            c1 = c1 * (ord(self.best_object[i]) - ord(self.object[i])) * random.random()
-            c2 = c2 * (ord(gl_best[i]) - ord(self.object[i])) * random.random()
-            self.velocity[i] = self.velocity[i] * w + c1 + c2
+            cc1 = c1 * (ord(self.best_object[i]) - ord(self.object[i])) * random.random()
+            cc2 = c2 * (ord(gl_best[i]) - ord(self.object[i])) * random.random()
+            self.velocity[i] = self.velocity[i] * w + cc1 + cc2
+
     def __eq__(self, other):
         DNA.__eq__(self,other)
         self.velocity=other.velocity
