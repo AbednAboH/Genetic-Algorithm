@@ -26,6 +26,8 @@ class algortithem:
         self.prob_spec = problem_spec
         self.file = open(r"pres.txt", "w+")
         self.fitnesstype=fitnesstype
+        self.tick=0
+        self.sol_time=0
 
     def init_population(self, pop_size, target_size):
         for i in range(pop_size):
@@ -54,28 +56,33 @@ class algortithem:
         for i in arr.keys():
             self.file.write(str(i) + " " + str(arr[i]) + "\n")
 
+    def handle_initial_time(self):
+        self.tick = time.time()
+        self.sol_time = time.perf_counter()
+
+    def handle_prints_time(self):
+        runtime = time.perf_counter() - self.sol_time
+        clockticks = time.time() - self.tick
+        print_B(self.population)
+        print_mean_var((self.pop_mean, variance((self.pop_mean, self.population[0].fitness))))
+        print_time((runtime, clockticks))
+
+    def algo(self,i):
+        pass
+
     def solve(self):
-        tick = time.time()
-        sol_time = time.perf_counter()
-        # random.seed(datetime.now())
+        self.handle_initial_time()
         self.init_population(self.pop_size, self.target_size)
+        for i in self.population:
+            print(i.object)
         for i in range(GA_MAXITER):
             self.file.write("i" + str(self.iteration) + "\n")
 
             self.iteration += 1
 
-            self.calc_fitness()  # // calculate fitness
-
-            self.sort_by_fitness()
-
+            self.algo(i)
             self.get_levels_fitness()
-            self.population, self.buffer = self.buffer, self.population  # // swap buffers
-
-            runtime = time.perf_counter() - sol_time
-            clockticks = time.time() - tick
-            print_B(self.population)
-            print_mean_var((self.pop_mean, variance((self.pop_mean, self.population[0].fitness))))
-            print_time((runtime, clockticks))
+            self.handle_prints_time()
             if (self.population)[0].fitness == 0: break
 
 

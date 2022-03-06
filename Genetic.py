@@ -1,6 +1,7 @@
-from create_problem_sets import DNA
+from create_problem_sets import *
 from function_selection import cross_types
 from algorithems import *
+from PSO import *
 """ to generalize the problem we created a class that given a population calculates the solution"""
 
 
@@ -40,34 +41,15 @@ class genetic_algorithem(algortithem):
 
             if (secrets.randbelow(122) < GA_MUTATION):
                 self.mutate(self.buffer[i])
+    def algo(self,i):
+        self.calc_fitness()  # // calculate fitness
 
-    def solve(self):
-        tick = time.time()
-        sol_time = time.perf_counter()
-        self.init_population(self.pop_size, self.target_size)
-        for i in range(GA_MAXITER):
-            self.file.write("i " + str(self.iteration) + "\n")
+        self.sort_by_fitness()
+        self.mate()  # // mate the population together
 
-            self.iteration += 1
+        self.population, self.buffer = self.buffer, self.population  # // swap buffers
 
-            self.calc_fitness()  # // calculate fitness
 
-            self.sort_by_fitness()
-
-            self.get_levels_fitness()
-
-            runtime = time.perf_counter() - sol_time
-            clockticks = time.time() - tick
-            print_B(self.population)
-            print_mean_var((self.pop_mean, variance((self.pop_mean, self.population[0].fitness))))
-            print_time((runtime, clockticks))
-            if (self.population)[0].fitness == 0: break
-
-            self.mate()  # // mate the population together
-
-            self.population, self.buffer = self.buffer, self.population  # // swap buffers
-        self.file.close()
-        return 0
 
 
 # inline functions
@@ -85,7 +67,9 @@ def main():
     fitness_func=int(input("pick fitness"))
     print(fitness_func)
     overall_time = time.perf_counter()
-    GA = genetic_algorithem(GA_TARGET, TAR_size, GA_POPSIZE, DNA, 2,fitness_func)
+    # GA = genetic_algorithem(GA_TARGET, TAR_size, GA_POPSIZE, DNA, 2,fitness_func)
+    # GA.solve()
+    GA = PSO_alg(GA_TARGET, TAR_size, GA_POPSIZE,PSO_prb, fitness_func)
     GA.solve()
     overall_time = time.perf_counter() - overall_time
 
