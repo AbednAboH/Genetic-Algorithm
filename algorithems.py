@@ -1,21 +1,9 @@
 import math
-import random
-import secrets
 import time
-
-RAND_MAX = 0x7fff
-
-GA_POPSIZE = 2048
-GA_MAXITER = 16384
-GA_ELITRATE = 0.10
-GA_MUTATIONRATE = 0.25
-GA_MUTATION = RAND_MAX * GA_MUTATIONRATE
-GA_TARGET = "hello"
-TAR_size = len(GA_TARGET)
-
-
+from Selection_methods import selection_methods
+from settings import GA_MAXITER
 class algortithem:
-    def __init__(self, target, tar_size, pop_size, problem_spec,fitnesstype):
+    def __init__(self, target, tar_size, pop_size, problem_spec,fitnesstype,selection):
         self.population = list(range(pop_size))
         self.buffer = list(range(pop_size))
         self.target = target
@@ -26,6 +14,8 @@ class algortithem:
         self.prob_spec = problem_spec
         self.file = open(r"pres.txt", "w+")
         self.fitnesstype=fitnesstype
+        self.selection_methods=selection_methods()
+        self.selection=selection
         self.tick=0
         self.sol_time=0
         self.solution=problem_spec()
@@ -41,12 +31,14 @@ class algortithem:
         mean = 0
         for i in range(self.pop_size):
             self.population[i].calculate_fittness(self.target, self.target_size,self.fitnesstype)
+            # mean += self.population[i].fitness
+        for i in range(self.pop_size):
             mean += self.population[i].fitness
 
         self.pop_mean = mean / self.pop_size
 
     def sort_by_fitness(self):
-        self.population.sort()
+        self.population=sorted(self.population)
 
     def get_levels_fitness(self):
         arr = {}
@@ -89,6 +81,7 @@ class algortithem:
 
             self.get_levels_fitness()
             self.handle_prints_time()
+
             if self.stopage():
                 break
 

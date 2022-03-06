@@ -1,5 +1,5 @@
 from algorithems import *
-
+from settings import GA_MAXITER
 
 class PSO_alg(algortithem):
     def __init__(self, target, tar_size, pop_size, problem_spec, fitnesstype):
@@ -37,7 +37,6 @@ class PSO_alg(algortithem):
             self.global_minima.object = self.population[0].object
             self.global_minima.calculate_fittness(self.target, self.target_size, self.fitnesstype)
         self.calc_fitness()
-        # self.sort_by_fitness()
 
         w = ((i - GA_MAXITER) * 0.4) / (GA_MAXITER ** 2 + 0.4)
         c1 = ((-3 * i) / GA_MAXITER) + 3.5

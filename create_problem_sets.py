@@ -1,7 +1,5 @@
 import random
-
-PENALTY = 30
-HIGH_PENALTY = 100
+from settings import *
 
 
 class fitness_selector:
