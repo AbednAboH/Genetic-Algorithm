@@ -1,5 +1,7 @@
 import random
-from settings import *
+import sys
+
+from settings import PENALTY,HIGH_PENALTY
 
 
 class fitness_selector:
@@ -46,9 +48,11 @@ class parameters:
     # for sorting purposes
     def __lt__(self, other):
         return self.fitness < other.fitness
+
     def __eq__(self, other):
-        self.fitness=other.fitness
-        self.object=other.object
+        self.fitness = other.fitness
+        self.object = other.object
+
 
 # class for first problem
 class DNA(parameters):
@@ -74,15 +78,14 @@ class PSO_prb(DNA):
     def __init__(self):
         DNA.__init__(self)
         self.velocity = None
-        self.best_object = None
+        self.p_best = sys.maxsize
+        self.p_best_object=None
 
     def helper(self, target_size):
         self.create_velocity(target_size)
 
     def create_velocity(self, target_size):
         self.velocity = [random.random() for i in range(target_size)]
-        self.best_object = self.object
-
     def calculate_new_position(self):
         pos = ""
         for i in range(len(self.object)):
@@ -91,11 +94,11 @@ class PSO_prb(DNA):
 
     def calculate_velocity(self, c1, c2, gl_best, w=0.5):
         for i in range(len(self.object)):
-            cc1 = c1 * (ord(self.best_object[i]) - ord(self.object[i])) * random.random()
+            cc1 = c1 * (ord(self.p_best_object[i]) - ord(self.object[i])) * random.random()
             cc2 = c2 * (ord(gl_best[i]) - ord(self.object[i])) * random.random()
             self.velocity[i] = self.velocity[i] * w + cc1 + cc2
 
     def __eq__(self, other):
-        DNA.__eq__(self,other)
-        self.velocity=other.velocity
-        self.best_object=other.best_object
+        DNA.__eq__(self, other)
+        self.velocity = other.velocity
+        self.best_object = other.best_object

@@ -1,6 +1,7 @@
 from math import sqrt
 import  numpy
 from random import randint
+from settings import RAND,SUS,RWS,RANK
 class selection_methods:
 
     #static propabilies list
@@ -8,7 +9,7 @@ class selection_methods:
     probabilities = []
 
     def __init__(self):
-        self.method={0:self.random_selection,1:self.SUS,2:self.RWS,3:self.Ranking}
+        self.method={RAND:self.random_selection,SUS:self.SUS,RWS:self.RWS,RANK:self.Ranking}
 
     def random_selection(self,population):
         popsize=len(population)

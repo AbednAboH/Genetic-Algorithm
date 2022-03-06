@@ -1,13 +1,13 @@
 # cross functions class
 import random
-
+from settings import *
 
 # given 2 samples(citizens) from the population calculate crossed sample
 class cross_types:
 
     def __init__(self):
         # maps functions to numbers so that we can choose which one to assign
-        self.select = {1: self.one_cross, 2: self.two_cross, 3: self.uniform_cross}
+        self.select = {CROSS1: self.one_cross, CROSS2: self.two_cross, UNI_CROSS: self.uniform_cross}
 
     def one_cross(self, citizen1, citizen2):
         target_size = len(citizen1)

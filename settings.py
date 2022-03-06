@@ -22,3 +22,7 @@ GA_MUTATIONRATE = 0.25
 GA_MUTATION = maxsize * GA_MUTATIONRATE
 GA_TARGET = "hello World!"
 TAR_size = len(GA_TARGET)
+
+#algorithems
+
+GenA,PSO=1,2
