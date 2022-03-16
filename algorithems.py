@@ -30,7 +30,7 @@ class algortithem:
             citizen.create_object(self.target_size)
             citizen.calculate_fittness(self.target, self.target_size, self.fitnesstype)
             self.population[i] = self.buffer[i] = citizen
-            self.fitness_array[i] = (1 / citizen.fitness+1)
+            self.fitness_array[i] = 1 / (citizen.fitness+1)
         self.sort_by_fitness()
 
     def calc_fitness(self):
@@ -80,6 +80,8 @@ class algortithem:
     def solve(self):
         self.handle_initial_time()
         self.init_population()
+        # for i in self.population:
+        #     print(i.object)
         for i in range(GA_MAXITER):
             # self.file.write("i" + str(self.iteration) + "\n")
 

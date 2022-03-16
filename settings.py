@@ -7,7 +7,7 @@ RAND,SUS,RWS,TOUR=0,1,2,3
 DISTANCE,BUL_PGIA,NQUEENS=0,1,2
 
 # type of cross function
-CROSS1,CROSS2,UNI_CROSS=1,2,3
+CROSS1,CROSS2,UNI_CROSS,PMX_,CX_=1,2,3,4,5
 
 # population surviving mechanizem 
 ELITIZEM,AGE=1,2

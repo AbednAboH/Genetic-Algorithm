@@ -1,9 +1,10 @@
 import random
 import sys
+from numpy import unique
 
 from settings import PENALTY, HIGH_PENALTY
 
-
+# class for fitness functions , add your fitness function here !
 class fitness_selector:
     def __init__(self):
         self.select = {0: self.distance_fittness, 1: self.bul_pqia,2: self.n_queens_conflict}
@@ -24,20 +25,37 @@ class fitness_selector:
     # fitness for NQueens:
     def n_queens_conflict(self, object, target, target_size):
         conflicts=0
-        # check if
         for col in range(target_size):
             for row in range(target_size):
-              
                 if row!=col:
                     # check if more than one queen is on the same right diagonal "/"
-                    conflicts+=1 if abs(object[row]-row)==abs(object[col]-col) else 0
-                    # check if more than one queen is on the same left diagonal "\"
-                    conflicts+=1 if abs(object[row]+row)==abs(object[col]+col) else 0
+                    conflicts+=1 if abs(row-col)==abs(object[col]-object[row]) else 0
+        # check for duplicates ! ,cannot be detected by diagonal's
+        conflicts+=abs(len(unique(object))-len(object))
+
         return conflicts
 
 
     ## fitness for pso
 
+# class for mutations !!
+
+class mutations:
+    def __init__(self):
+        self.select = {1: self.random_mutate, 2: self.swap_mutate ,3: self.insertion_mutate}
+    
+    def random_mutate(self, target_size, member,character_creation):
+        ipos = random.randint(0, target_size - 1)
+        delta = character_creation(target_size)
+        member.object = member.object[:ipos] + [delta] + member.object[ipos + 1:]
+    def swap_mutate(self, target_size, member,character_creation):
+        ipos = random.randint(0, target_size - 2)
+        ipos2 = random.randint(ipos + 1, target_size - 1)
+        member.object = member.object[0:ipos] + [member[ipos2]] + member.object[ipos + 1:ipos2] + [member[ipos]] + member[ipos2 + 1:]
+    def insertion_mutate(self, target_size, member,character_creation):
+        ipos = random.randint(0, target_size - 2)
+        ipos2 = random.randint(ipos + 1, target_size - 1)
+        member.object = member.object[0:ipos] + member.object[ipos + 1:ipos2] + [member[ipos]] + member[ipos2 + 1:]
 
 # basic class for all problem sets because fittness and the member of the population are problem specific
 # and we have to eliminate problem specifc parameters from the Genetic algorithem
@@ -52,7 +70,8 @@ class parameters:
     # creates a member of the population
     def create_object(self, target_size):
         return self.object
-
+    def character_creation(self,target_size):
+        pass
     # function to calculate the fitness for this specific problem
     def calculate_fittness(self, target, target_size, select_fitness, age_update=True):
         self.fitness = self.fitnesstype[select_fitness](self.object, target, target_size)
@@ -74,22 +93,25 @@ class parameters:
 
 # class for first problem
 class DNA(parameters):
+    mutation=mutations()
     def __init__(self):
         parameters.__init__(self)
 
     def create_object(self, target_size):
         self.object = []
         for j in range(target_size):
-            self.object += [chr((random.randint(0, 90)) + 32)]
+            self.object += [self.character_creation(target_size)]
         self.helper(target_size)
         return self.object
 
-    def mutate(self, target_size, member):
-        ipos = random.randint(0, target_size - 1)
-        delta = random.randint(0, 90) + 32
-        # member.object.replace(member.object[ipos], chr((ord(member.object[ipos]) + delta) % 122))
-        member.object = member.object[:ipos] + [chr((ord(member.object[ipos]) + delta) % 122)] + member.object[
-                                                                                                 ipos + 1:]
+    def character_creation(self,target_size):
+        return chr((random.randint(0, 90)) + 32)
+
+    def mutate(self, target_size, member,mutation_type):
+        # ipos = random.randint(0, target_size - 1)
+        # delta = self.character_creation(target_size)
+        # member.object = member.object[:ipos] + [delta] + member.object[ipos + 1:]
+        self.mutation.select[mutation_type](target_size, member,self.character_creation)
 
 
 # class for pso problem
@@ -135,7 +157,6 @@ class NQueens_prb(DNA):
 
     def create_object(self, target_size):
         self.object = random.sample(range(0, target_size), target_size)
-    def mutate(self, target_size, member):
-        ipos = random.randint(0, target_size - 1)
-        delta = random.randint(0,target_size-1)
-        member.object = member.object[:ipos] + [delta] + member.object[ipos + 1:]
+    def character_creation(self,target_size):
+        return random.randint(0,target_size-1)
+
