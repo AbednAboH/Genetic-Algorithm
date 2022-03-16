@@ -27,14 +27,15 @@ class genetic_algorithem(algortithem):
         self.cross(esize)
 
     def cross(self,esize):
+        ### maybe population needs to go down ! so use buffer.append ! maybe not sure !
         if self.selection==RWS:
             self.selection_methods.spin_the_rulette(self.population,self.pop_mean)
         for i in range(esize,self.pop_size):
             self.buffer[i] = self.prob_spec()
             citizen1= self.prob_spec()
             citizen2= self.prob_spec()
-            i1,i2=self.selection_methods.method[self.selection](self.population)
-            citizen1.object, citizen2.object = self.cross_func(self.population[i1].object, self.population[i2].object)
+            i1,i2=self.selection_methods.method[self.selection](self.population,self.fitness_array)
+            citizen1.object, citizen2.object = self.cross_func(i1.object, i2.object)
             citizen1.calculate_fittness(self.target,self.target_size,self.fitnesstype)
             citizen2.calculate_fittness(self.target,self.target_size,self.fitnesstype)
             # select best of the two
@@ -44,8 +45,8 @@ class genetic_algorithem(algortithem):
                 self.mutate(self.buffer[i])
     def algo(self,i):
         self.calc_fitness()  # // calculate fitness
-
         self.sort_by_fitness()
+        self.update_fitness_array()
         self.mate()  # // mate the population together
 
         self.population, self.buffer = self.buffer, self.population  # // swap buffers

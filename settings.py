@@ -1,7 +1,7 @@
 from sys import maxsize
 
 # selectors aliases
-RAND,SUS,RWS,RANK=0,1,2,3
+RAND,SUS,RWS,TOUR=0,1,2,3
 
 # fitness function aliases / "function selectors"
 DISTANCE,BUL_PGIA=0,1

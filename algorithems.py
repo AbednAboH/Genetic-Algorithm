@@ -2,10 +2,14 @@ import math
 import time
 from Selection_methods import selection_methods
 from settings import GA_MAXITER
+import numpy
+
+
 class algortithem:
-    def __init__(self, target, tar_size, pop_size, problem_spec,fitnesstype,selection):
+    def __init__(self, target, tar_size, pop_size, problem_spec, fitnesstype, selection):
         self.population = list(range(pop_size))
         self.buffer = list(range(pop_size))
+        self.fitness_array = numpy.zeros((pop_size))
         self.target = target
         self.target_size = tar_size
         self.pop_size = pop_size
@@ -13,24 +17,26 @@ class algortithem:
         self.iteration = 0  # current iteration that went through the algorithem
         self.prob_spec = problem_spec
         self.file = open(r"pres.txt", "w+")
-        self.fitnesstype=fitnesstype
-        self.selection_methods=selection_methods()
-        self.selection=selection
-        self.tick=0
-        self.sol_time=0
-        self.solution=problem_spec()
+        self.fitnesstype = fitnesstype
+        self.selection_methods = selection_methods()
+        self.selection = selection
+        self.tick = 0
+        self.sol_time = 0
+        self.solution = problem_spec()
 
-    def init_population(self, pop_size, target_size):
-        for i in range(pop_size):
+    def init_population(self):
+        for i in range(self.pop_size):
             citizen = self.prob_spec()
-            citizen.create_object(target_size)
-            citizen.calculate_fittness(self.target, target_size, self.fitnesstype)
-            self.population[i] = citizen
+            citizen.create_object(self.target_size)
+            citizen.calculate_fittness(self.target, self.target_size, self.fitnesstype)
+            self.population[i] = self.buffer[i] = citizen
+            self.fitness_array[i] = (1 / citizen.fitness+1)
+        self.sort_by_fitness()
 
     def calc_fitness(self):
         mean = 0
         for i in range(self.pop_size):
-            self.population[i].calculate_fittness(self.target, self.target_size,self.fitnesstype)
+            self.population[i].calculate_fittness(self.target, self.target_size, self.fitnesstype)
             # mean += self.population[i].fitness
         for i in range(self.pop_size):
             mean += self.population[i].fitness
@@ -38,7 +44,11 @@ class algortithem:
         self.pop_mean = mean / self.pop_size
 
     def sort_by_fitness(self):
-        self.population=sorted(self.population)
+        self.population = sorted(self.population)
+
+    def update_fitness_array(self):
+        for j in range(self.pop_size):
+            self.fitness_array[j] = 1 / (self.population[j].fitness+1)
 
     def get_levels_fitness(self):
         arr = {}
@@ -61,17 +71,15 @@ class algortithem:
         print_mean_var((self.pop_mean, variance((self.pop_mean, self.population[0].fitness))))
         print_time((runtime, clockticks))
 
-    def algo(self,i):
+    def algo(self, i):
         pass
 
     def stopage(self):
-        return  self.population[0].fitness == 0
+        return self.population[0].fitness == 0
 
     def solve(self):
         self.handle_initial_time()
-        self.init_population(self.pop_size, self.target_size)
-        for i in self.population:
-            print(i.object)
+        self.init_population()
         for i in range(GA_MAXITER):
             self.file.write("i" + str(self.iteration) + "\n")
 
@@ -80,14 +88,15 @@ class algortithem:
             self.algo(i)
 
             self.get_levels_fitness()
+
             self.handle_prints_time()
 
             if self.stopage():
                 break
 
-
         self.file.close()
         return 0
+
 
 print_B = lambda x: print(f" Best: {x.object} ,fittness: {x.fitness} ", end=" ")
 
