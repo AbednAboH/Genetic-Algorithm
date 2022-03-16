@@ -1,7 +1,7 @@
 import random
 import sys
 
-from settings import PENALTY,HIGH_PENALTY
+from settings import PENALTY, HIGH_PENALTY
 
 
 class fitness_selector:
@@ -31,6 +31,7 @@ class parameters:
     def __init__(self):
         self.fitnesstype = fitness_selector().select
         self.object = None
+        self.age = 0
         self.fitness = 0
 
     # creates a member of the population
@@ -38,8 +39,9 @@ class parameters:
         return self.object
 
     # function to calculate the fitness for this specific problem
-    def calculate_fittness(self, target, target_size, select_fitness):
+    def calculate_fittness(self, target, target_size, select_fitness, age_update=True):
         self.fitness = self.fitnesstype[select_fitness](self.object, target, target_size)
+        self.age += 1 if age_update else 0
         return self.fitness
 
     def helper(self, target_size):
@@ -52,6 +54,7 @@ class parameters:
     def __eq__(self, other):
         self.fitness = other.fitness
         self.object = other.object
+        # age ! 
 
 
 # class for first problem
@@ -79,13 +82,14 @@ class PSO_prb(DNA):
         DNA.__init__(self)
         self.velocity = None
         self.p_best = sys.maxsize
-        self.p_best_object=None
+        self.p_best_object = None
 
     def helper(self, target_size):
         self.create_velocity(target_size)
 
     def create_velocity(self, target_size):
         self.velocity = [random.random() for i in range(target_size)]
+
     def calculate_new_position(self):
         pos = ""
         for i in range(len(self.object)):

@@ -9,6 +9,8 @@ DISTANCE,BUL_PGIA=0,1
 # type of cross function
 CROSS1,CROSS2,UNI_CROSS=1,2,3
 
+# population surviving mechanizem 
+ELITIZEM,AGE=1,2
 # penalties given by bul pgiaa heuristic
 
 PENALTY = 30
