@@ -98,8 +98,8 @@ class algortithem:
         return 0
 
 
-print_B = lambda x: print(f" Best: ,fittness: {x.fitness} ", end=" ")
-# print_B = lambda x: print(f" Best: {x.object} ,fittness: {x.fitness} ", end=" ")
+# print_B = lambda x: print(f" Best: ,fittness: {x.fitness} ", end=" ")
+print_B = lambda x: print(f" Best: {x.object} ,fittness: {x.fitness} ", end=" ")
 
 #  prints mean and variance
 print_mean_var = lambda x: print(f"Mean: {x[0]} ,Variance: {x[1]}", end=" ")

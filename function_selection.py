@@ -24,8 +24,8 @@ class cross_types:
 
     def uniform_cross(self, citizen1, citizen2):
         target_size = len(citizen1)
-        object1 = ""
-        object2 = ""
+        object1 = []
+        object2 = []
         for i in range(target_size):
             if random.random() > 0.5:
                 object1 += citizen2[i]

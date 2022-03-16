@@ -6,7 +6,7 @@ from settings import PENALTY, HIGH_PENALTY
 
 class fitness_selector:
     def __init__(self):
-        self.select = {0: self.distance_fittness, 1: self.bul_pqia}
+        self.select = {0: self.distance_fittness, 1: self.bul_pqia,2: self.n_queens_conflict}
 
     def distance_fittness(self, object, target, target_size):
         fitness = 0
@@ -21,6 +21,21 @@ class fitness_selector:
             if ord(object[i]) != ord(target[i]):
                 fitness += PENALTY if object[i] in target else HIGH_PENALTY
         return fitness
+    # fitness for NQueens:
+    def n_queens_conflict(self, object, target, target_size):
+        conflicts=0
+        # check if
+        for col in range(target_size):
+            for row in range(target_size):
+              
+                if row!=col:
+                    # check if more than one queen is on the same right diagonal "/"
+                    conflicts+=1 if abs(object[row]-row)==abs(object[col]-col) else 0
+                    # check if more than one queen is on the same left diagonal "\"
+                    conflicts+=1 if abs(object[row]+row)==abs(object[col]+col) else 0
+        return conflicts
+
+
     ## fitness for pso
 
 
@@ -63,16 +78,18 @@ class DNA(parameters):
         parameters.__init__(self)
 
     def create_object(self, target_size):
-        self.object = ""
+        self.object = []
         for j in range(target_size):
-            self.object += chr((random.randint(0, 90)) + 32)
+            self.object += [chr((random.randint(0, 90)) + 32)]
         self.helper(target_size)
         return self.object
 
     def mutate(self, target_size, member):
         ipos = random.randint(0, target_size - 1)
         delta = random.randint(0, 90) + 32
-        member.object.replace(member.object[ipos], chr((ord(member.object[ipos]) + delta) % 122))
+        # member.object.replace(member.object[ipos], chr((ord(member.object[ipos]) + delta) % 122))
+        member.object = member.object[:ipos] + [chr((ord(member.object[ipos]) + delta) % 122)] + member.object[
+                                                                                                 ipos + 1:]
 
 
 # class for pso problem
@@ -106,3 +123,19 @@ class PSO_prb(DNA):
         DNA.__eq__(self, other)
         self.velocity = other.velocity
         self.best_object = other.best_object
+
+
+# class to define n queens problem 
+# approach :  with an array of N places , each place represents the row 
+# and the value in each place represents colums meaning : 
+# Arr={6,3,...}   ;   Arr[0] is the 6's column and 0 is the row 
+class NQueens_prb(DNA):
+    def __init__(self):
+        parameters.__init__(self)
+
+    def create_object(self, target_size):
+        self.object = random.sample(range(0, target_size), target_size)
+    def mutate(self, target_size, member):
+        ipos = random.randint(0, target_size - 1)
+        delta = random.randint(0,target_size-1)
+        member.object = member.object[:ipos] + [delta] + member.object[ipos + 1:]

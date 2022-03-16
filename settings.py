@@ -4,7 +4,7 @@ from sys import maxsize
 RAND,SUS,RWS,TOUR=0,1,2,3
 
 # fitness function aliases / "function selectors"
-DISTANCE,BUL_PGIA=0,1
+DISTANCE,BUL_PGIA,NQUEENS=0,1,2
 
 # type of cross function
 CROSS1,CROSS2,UNI_CROSS=1,2,3
@@ -17,7 +17,8 @@ PENALTY = 30
 HIGH_PENALTY = 90
 
 # population settings
-GA_POPSIZE = 2048
+# GA_POPSIZE = 2048
+GA_POPSIZE = 512
 GA_MAXITER = 16384
 GA_ELITRATE = 0.10
 GA_MUTATIONRATE = 0.25
