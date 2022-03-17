@@ -51,11 +51,12 @@ class mutations:
     def swap_mutate(self, target_size, member,character_creation):
         ipos = random.randint(0, target_size - 2)
         ipos2 = random.randint(ipos + 1, target_size - 1)
-        member.object = member.object[0:ipos] + [member[ipos2]] + member.object[ipos + 1:ipos2] + [member[ipos]] + member[ipos2 + 1:]
+        member.object = member.object[:ipos] + [member.object[ipos2]] + member.object[ipos + 1:ipos2] + [member.object[ipos]] + member.object[ipos2 + 1:]
     def insertion_mutate(self, target_size, member,character_creation):
         ipos = random.randint(0, target_size - 2)
         ipos2 = random.randint(ipos + 1, target_size - 1)
-        member.object = member.object[0:ipos] + member.object[ipos + 1:ipos2] + [member[ipos]] + member[ipos2 + 1:]
+        member.object = member.object[:ipos] + member.object[ipos + 1:ipos2] + [member.object[ipos]] + member.object[ipos2 :]
+
 
 # basic class for all problem sets because fittness and the member of the population are problem specific
 # and we have to eliminate problem specifc parameters from the Genetic algorithem
@@ -108,9 +109,6 @@ class DNA(parameters):
         return chr((random.randint(0, 90)) + 32)
 
     def mutate(self, target_size, member,mutation_type):
-        # ipos = random.randint(0, target_size - 1)
-        # delta = self.character_creation(target_size)
-        # member.object = member.object[:ipos] + [delta] + member.object[ipos + 1:]
         self.mutation.select[mutation_type](target_size, member,self.character_creation)
 
 
@@ -156,7 +154,11 @@ class NQueens_prb(DNA):
         parameters.__init__(self)
 
     def create_object(self, target_size):
-        self.object = random.sample(range(0, target_size), target_size)
+        obj=random.sample(range(target_size), target_size)
+        while len(unique(obj))!=len(obj):
+            obj = random.sample(range(target_size), target_size)
+        print(len(unique(obj))-len(obj))
+        self.object =obj
     def character_creation(self,target_size):
         return random.randint(0,target_size-1)
 

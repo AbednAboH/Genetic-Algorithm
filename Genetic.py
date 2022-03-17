@@ -13,13 +13,14 @@ class genetic_algorithem(algortithem):
         algortithem.__init__(self, target, tar_size, pop_size, problem_spec, fitnesstype, selection)
         self.cross_func = cross_types().select[crosstype]
         self.serviving = serviving_mechanizem
+        self.mutation_type=mutation
 
     # this function calculates fittness for all the population and it's mean value and returns it """
 
 
 
     def mutate(self, member):
-        member.mutate(self.target_size, member,1)
+        member.mutate(self.target_size, member,self.mutation_type)
 
     def age_based(self):
         age_based_population = [citizen for citizen in self.population if 2 < citizen.age < 20]

@@ -16,15 +16,16 @@ def main():
     if alg == GenA:
         prob = int(input("choose problem to solve :  1:Bul Pgia  2:N Queens "))
         problem_set = problem_sets_GA[prob]
-        crosstype = int(input("choose cross function :  One Cross: 1  Two Cross: 2  Uniform: 3"))
+        crosstype = int(input("choose cross function :  One Cross: 1  Two Cross: 2  Uniform: 3  PMX: 4   CX: 5"))
         selection = int(input("choose selection function :  RAND: 0  SUS: 1  RWS: 2  RANK:3"))
         serviving_stratigy = int(input("choose surviving strategy :  Elite: 1 ,Age: 2"))
-        mutation=int(input("choose mutation scheme:  random mutation: 1 ,swap_mutate: 2 ,insertion_mutate: 3"))
         if prob == BUL_PGIA:
             fit = int(input("choose fitness function :  0:Distance  1:Bul Pgia   "))
+            mutation = int(input("choose mutation scheme:  random mutation: 1 ,swap_mutate: 2 ,insertion_mutate: 3"))
             target_size = TAR_size
         else:
             fit = NQUEENS
+            mutation = int(input("choose mutation scheme:swap_mutate: 2 ,insertion_mutate: 3"))
             target_size = int(input("choose number of queens :"))
         solution = algo[alg](GA_TARGET, target_size, GA_POPSIZE, problem_set, crosstype, fit, selection,
                              serviving_stratigy,mutation)

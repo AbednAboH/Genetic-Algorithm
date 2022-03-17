@@ -1,7 +1,7 @@
 # cross functions class
 import random
 from settings import *
-
+from numpy import  unique
 
 # given 2 samples(citizens) from the population calculate crossed sample
 class cross_types:
@@ -53,36 +53,38 @@ class cross_types:
                 object2[i] = c1 if object2[i] == c2 else c2 if object2[i] == c1 else object2[i]
 
         return object1, object2
-
+    # problem accures when cyrcle is broken !
     def CX(self, citizen1, citizen2):
-        first = citizen1[0]
         object1 = citizen1
         object2 = citizen2
         target_len = len(citizen1)
-        count = 0
         hash1 = {citizen1[i]: i for i in range(target_len)}
-        hash2 = {citizen2[i]: i for i in range(target_len)}
         cycles = []
         cycle = []
         all_indexes = []
         # get all cycles
+        if len(unique(object1)) - len(object1) != len(unique(object2)) - len(object2):
+            print(f"problem doesn't support this type of crossing ! charachters need to be unique ! so that the cycles exist ")
+        # find the cycles
         for i in range(target_len):
+            # if we havent gone over this cycle then get its members
             if i not in all_indexes:
-                self.cycle(hash2, i, citizen2, cycle)
+                self.cycle(hash1, i, citizen1,citizen2, cycle)
                 cycles.append(cycle)
                 all_indexes = all_indexes[:] + cycle[:]
+     
         for i in range(len(cycles)):
-            # if current cycle devides by 2 then swap
-            if i % 2 == 1:
+            # if current cycle devides by 2 then swap (i+1 because cycles->(1,...n))
+            if (i+1) % 2 == 1:
                 current_cycle = cycles[i]
                 for j in current_cycle:
+                # swap the values in this specific cycle  
                     object1[j], object2[j] = object2[j], object1[j]
-        # print("out ")
         return object1, object2
 
-    def cycle(self, hash2, first, c2, cycle):
-        i = hash2[c2[first]]
-        cycle.append(i)
-        while i != first:
-            i = hash2[c2[first]]
-            cycle.append(i)
+    def cycle(self, hash2, first,c1, c2, cycle):
+        num = hash2[c2[first]]
+        cycle.append(num)
+        while num != first:
+            num = hash2[c2[num]]
+            cycle.append(num)
