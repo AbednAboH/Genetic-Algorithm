@@ -7,7 +7,7 @@ from settings import PENALTY, HIGH_PENALTY
 # class for fitness functions , add your fitness function here !
 class fitness_selector:
     def __init__(self):
-        self.select = {0: self.distance_fittness, 1: self.bul_pqia,2: self.n_queens_conflict}
+        self.select = {0: self.distance_fittness, 1: self.bul_pqia,2: self.n_queens_conflict ,3:self.n_queens_conf_based_on_place}
 
     def distance_fittness(self, object, target, target_size):
         fitness = 0
@@ -34,7 +34,14 @@ class fitness_selector:
         conflicts+=abs(len(unique(object))-len(object))
 
         return conflicts
-
+    def n_queens_conf_based_on_place(self,object,row,col):
+        conflicts = 0
+        for i in range(len(object)):
+            if i == col:
+                continue
+            if (object[i] == row or abs(object[i] - row) == abs(i - col)) :
+                conflicts += 1
+        return conflicts
 
     ## fitness for pso
 
@@ -62,8 +69,8 @@ class mutations:
 # and we have to eliminate problem specifc parameters from the Genetic algorithem
 # might add mutate !
 class parameters:
-    def __init__(self):
-        self.fitnesstype = fitness_selector().select
+    fitnesstype = fitness_selector().select
+    def __init__(self):  
         self.object = None
         self.age = 0
         self.fitness = 0
@@ -157,7 +164,6 @@ class NQueens_prb(DNA):
         obj=random.sample(range(target_size), target_size)
         while len(unique(obj))!=len(obj):
             obj = random.sample(range(target_size), target_size)
-        print(len(unique(obj))-len(obj))
         self.object =obj
     def character_creation(self,target_size):
         return random.randint(0,target_size-1)

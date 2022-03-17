@@ -17,6 +17,7 @@ class algortithem:
         self.iteration = 0  # current iteration that went through the algorithem
         self.prob_spec = problem_spec
         self.file = open(r"pres.txt", "w+")
+        self.file.close()
         self.fitnesstype = fitnesstype
         self.selection_methods = selection_methods()
         self.selection = selection
@@ -68,7 +69,7 @@ class algortithem:
         runtime = time.perf_counter() - self.sol_time
         clockticks = time.time() - self.tick
         print_B(self.solution)
-        print_mean_var((self.pop_mean, variance((self.pop_mean, self.population[0].fitness))))
+        print_mean_var((self.pop_mean, variance((self.pop_mean, self.solution.fitness))))
         print_time((runtime, clockticks))
 
     def algo(self, i):
@@ -83,7 +84,8 @@ class algortithem:
         # for i in self.population:
         #     print(i.object)
         for i in range(GA_MAXITER):
-            # self.file.write("i" + str(self.iteration) + "\n")
+            # self.file=open(rf"{i}.txt", "w+")
+            # self.file.write("generation: " + str(self.iteration) + "\n")
 
             self.iteration += 1
 
@@ -95,6 +97,7 @@ class algortithem:
 
             if self.stopage():
                 break
+            # self.file.close()
 
         # self.file.close()
         return 0

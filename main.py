@@ -1,17 +1,17 @@
 from settings import *
 from Genetic import genetic_algorithem
-from PSO import PSO_alg
+from PSO import PSO_alg,Minimal_conflicts
 from create_problem_sets import *
 import time
 
-algo = {GenA: genetic_algorithem, PSO: PSO_alg}
+algo = {GenA: genetic_algorithem, PSO: PSO_alg, MINIMAL_CONF: Minimal_conflicts}
 problem_sets_GA = {BUL_PGIA: DNA, NQUEENS: NQueens_prb}
 problem_sets_PSO = {BUL_PGIA: PSO_prb}
 elitizem_or_aging = {}
 
 
 def main():
-    alg = int(input("chose algorithem :  1:GA  2:PSO"))
+    alg = int(input("chose algorithem :  1:GA  2:PSO 3:Minimal conflicts"))
     solution = None
     if alg == GenA:
         prob = int(input("choose problem to solve :  1:Bul Pgia  2:N Queens "))
@@ -33,9 +33,13 @@ def main():
         problem_set = problem_sets_PSO[int(input("choose problem to solve :  1:Bul Pgia "))]
         fit = int(input("choose fitness function :  0:Distance  1:Bul Pgia "))
         solution = algo[alg](GA_TARGET, TAR_size, GA_POPSIZE, problem_set, fit)
+    elif alg == MINIMAL_CONF:
+        target_size = int(input("choose number of queens :"))
+        target=None
+        solution=algo[alg](target, target_size, selection=None)
 
+        overall_time = time.perf_counter()
     overall_time = time.perf_counter()
-
     solution.solve()
     overall_time = time.perf_counter() - overall_time
 
