@@ -28,7 +28,8 @@ class algortithem:
     def init_population(self):
         for i in range(self.pop_size):
             citizen = self.prob_spec()
-            citizen.create_object(self.target_size)
+            citizen.create_object(self.target_size,self.target)
+
             citizen.calculate_fittness(self.target, self.target_size, self.fitnesstype)
             self.population[i] = self.buffer[i] = citizen
             self.fitness_array[i] = 1 / (citizen.fitness+1)
@@ -58,8 +59,8 @@ class algortithem:
                 arr[i.fitness] += 1
             else:
                 arr[i.fitness] = 1
-        for i in arr.keys():
-            self.file.write(str(i) + " " + str(arr[i]) + "\n")
+        # for i in arr.keys():
+            # self.file.write(str(i) + " " + str(arr[i]) + "\n")
 
     def handle_initial_time(self):
         self.tick = time.time()
@@ -103,7 +104,7 @@ class algortithem:
         return 0
 
 
-# print_B = lambda x: print(f" Best: ,fittness: {x.fitness} ", end=" ")
+# print_B = lambda x: print(f" Best:{len(x.object)} ,fittness: {x.fitness} ", end=" ")
 print_B = lambda x: print(f" Best: {x.object} ,fittness: {x.fitness} ", end=" ")
 
 #  prints mean and variance

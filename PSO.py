@@ -39,8 +39,8 @@ class PSO_alg(algortithem):
         self.sort_by_fitness()
 
         w = ((i - GA_MAXITER) * 0.4) / (GA_MAXITER ** 2 + 0.4)
-        c1 = ((-3 * i) / GA_MAXITER) + 3.5
-        c2 = ((3 * i) / GA_MAXITER) + 0.5
+        c1 = ((-3 * i) / GA_MAXITER) + 2
+        c2 = ((3 * i) / GA_MAXITER) + 2
         if not self.stopage():
             for particle in self.population:
                 particle.calculate_velocity(c1, c2, self.global_minima.object, w)
