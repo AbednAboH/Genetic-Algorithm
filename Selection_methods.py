@@ -7,8 +7,8 @@ from settings import RAND, SUS, RWS,TOUR
 class selection_methods:
     # static propabilies list
 
-    probabilities = []
-    rank=[]
+    ranks = []
+
     def __init__(self):
         self.method = {RAND: self.random_selection, SUS: self.SUS, RWS: self.RWS,
                        TOUR: self.tournement}
@@ -34,10 +34,10 @@ class selection_methods:
 
     def RWS(self, population, fitness_array, k=10):
         # check the +1 !
-        range_of_choices = len(self.probabilities)
+        range_of_choices = len(self.ranks)
         # roll the rullette
-        chosen = numpy.random.choice(range_of_choices, p=self.probabilities)
-        chosen2 = numpy.random.choice(range_of_choices, p=self.probabilities)
+        chosen = numpy.random.choice(range_of_choices, p=self.ranks)
+        chosen2 = numpy.random.choice(range_of_choices, p=self.ranks)
         return population[chosen], population[chosen2]
 
 
@@ -53,7 +53,7 @@ class selection_methods:
         # spin the wheel:
         fitness_array = numpy.array([1 / linear_scale((citizen.fitness + 1, 0.5, 0)) for citizen in population])
         fitness_sum = fitness_array.sum()
-        self.probabilities = [1 / linear_scale((citizen.fitness + 1, 0.5, 0)) / fitness_sum for citizen in population]
+        self.ranks = [1 / linear_scale((citizen.fitness + 1, 0.5, 0)) / fitness_sum for citizen in population]
 
 
 def linear_scale(x):
