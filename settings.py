@@ -28,4 +28,4 @@ TAR_size = len(GA_TARGET)
 
 #algorithems
 
-GenA,PSO,MINIMAL_CONF=1,2,3
+GenA,PSO,MINIMAL_CONF,FIRST_FIT=1,2,3,4

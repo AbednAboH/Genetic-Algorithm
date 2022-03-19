@@ -2,6 +2,7 @@ import math
 import time
 from Selection_methods import selection_methods
 from settings import GA_MAXITER
+
 import numpy
 
 
@@ -82,8 +83,6 @@ class algortithem:
     def solve(self):
         self.handle_initial_time()
         self.init_population()
-        # for i in self.population:
-        #     print(i.object)
         for i in range(GA_MAXITER):
             # self.file=open(rf"{i}.txt", "w+")
             # self.file.write("generation: " + str(self.iteration) + "\n")
@@ -91,11 +90,11 @@ class algortithem:
             self.iteration += 1
 
             self.algo(i)
-
+            # for j in self.population:
+            #     print(j.object)
             self.get_levels_fitness()
 
             self.handle_prints_time()
-
             if self.stopage():
                 break
             # self.file.close()
@@ -105,7 +104,8 @@ class algortithem:
 
 
 # print_B = lambda x: print(f" Best:{len(x.object)} ,fittness: {x.fitness} ", end=" ")
-print_B = lambda x: print(f" Best: {x.object} ,fittness: {x.fitness} ", end=" ")
+print_B = lambda x: print(f" Best:{ x } ,fittness: {x.fitness} ", end=" ")
+# print_B = lambda x: print(f" Best: {x.object} ,fittness: {x.fitness} ", end=" ")
 
 #  prints mean and variance
 print_mean_var = lambda x: print(f"Mean: {x[0]} ,Variance: {x[1]}", end=" ")
