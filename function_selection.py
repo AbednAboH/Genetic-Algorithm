@@ -3,6 +3,7 @@ import random
 from settings import *
 from numpy import  unique
 
+
 # given 2 samples(citizens) from the population calculate crossed sample
 class cross_types:
 
@@ -83,16 +84,19 @@ class cross_types:
     def cross_bin(self,citizen1, citizen2):
         #two cross over points per chromosom
         c1pos1= random.randint(0,  len(citizen1.object) - 2)
-        c1pos2= random.randint(c1pos1,  len(citizen1.object)-1)
+        c1pos2= random.randint(c1pos1+1,  len(citizen1.object)-1)
 
         c2pos1= random.randint(0,  len(citizen2.object) - 2)
-        c2pos2= random.randint(c2pos1,  len(citizen2.object)-1)
+        c2pos2= random.randint(c2pos1+1,  len(citizen2.object)-1)
 
         c1,c2=citizen1,citizen2
 
-        crossed_from_c2=[citizen2.object[c2pos1]]+[citizen2.object[c2pos2]]
-        crossed_from_c1=[citizen1.object[c1pos1]]+[citizen1.object[c1pos2]]
+        # crossed_from_c2=[citizen2.object[c2pos1]]+[citizen2.object[c2pos2]]
+        # crossed_from_c1=[citizen1.object[c1pos1]]+[citizen1.object[c1pos2]]
         # print(len(crossed_from_c1),len(crossed_from_c2))
+        k=10
+        crossed_from_c2 = random.sample(citizen2.object, k)
+        crossed_from_c1 = random.sample(citizen1.object,k)
         c1.remove_bins(crossed_from_c2)
         c2.remove_bins(crossed_from_c1)
         # print("------------------------",len(c1.object), len(c2.object))
