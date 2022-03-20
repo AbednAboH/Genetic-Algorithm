@@ -143,17 +143,11 @@ class bin:
             if self.fill + self.hash[items[item]] <= self.capacity:
                 self.items.append(items[item])
                 self.fill += self.hash[items[item]]
+            # else:
+            #     break
         return setdiff1d(items, self.items)
 
-    def try_to_fill(self, item):
-        if not item:
-            return False
-        if self.fill + self.hash[item] > self.capacity:
-            return False
-        else:
-            self.fill += self.hash[item]
-            self.items.append(item)
-            return True
+
 
     # if there exists a member that is mutual between the two then return false
     def __lt__(self, other):
@@ -161,12 +155,29 @@ class bin:
 
     def __eq__(self, other):
         return self.items == other.items
+# add a field for bins with a way to fill them "first fit "
+class first_fit_prob(bin):
+    hash = hash_table
+    capacity = 0
 
+    def __init__(self, capacity, items=[], fill=0):
+        bin.__init__(self,capacity)
+
+    def fill_bins(self, items):
+        #fit according to the fill ratio
+        for item in range(len(items)):
+            if self.fill + self.hash[items[item]] <= self.capacity:
+                self.items.append(items[item])
+                self.fill += self.hash[items[item]]
+        return setdiff1d(items, self.items)
+
+# class bin(first_fit):
 
 # send target with [real target,capacity of each bin]
 class bin_packing_prob(DNA):
     target = []
     capacity = 0
+    bin1=bin
 
     def __init__(self):
         parameters.__init__(self)
@@ -177,14 +188,14 @@ class bin_packing_prob(DNA):
 
     def set_capacity(self, cap):
         self.capacity = cap
-        bin.capacity = cap
+        self.bin1.capacity = cap
 
     def create_special_parameter(self, target_size):
         self.bin_objects = []
         obj = self.object
         # print(self)
         while len(obj):
-            new_bin = bin(self.capacity)
+            new_bin = self.bin1(self.capacity)
             obj = new_bin.fill_bins(obj)
             self.bin_objects[:] = self.bin_objects[:] + [new_bin]
         # print(self)
@@ -207,6 +218,15 @@ class bin_packing_prob(DNA):
         bstr += "]\n"
         bstr+="number of bins:"+str(len(self.bin_objects))+"\n"
         return bstr
+
+#first-fit
+class bin_pack(bin_packing_prob):
+    bin1 = first_fit_prob
+    def __init__(self):
+        super(bin_pack, self).__init__()
+
+
+
 
 class hybrid_bin_packing_prob(DNA):
     target = []

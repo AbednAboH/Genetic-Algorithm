@@ -1,5 +1,5 @@
 from algorithems import algortithem
-from create_problem_sets import bin_packing_prob
+from create_problem_sets import bin_pack
 from settings import BIN
 class FirstFit(algortithem):
     def __init__(self, target, tar_size, problem_spec=None,fitness=None , selection=None):
