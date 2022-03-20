@@ -237,3 +237,66 @@ classes for algorithems :
 				    return super(PSO_prb, self).__str__()
 
 ## i think that by now the logic is quite clear on how everything fits together 
+
+### so basically , almost every class that has parameters as a forfather is used to change some type of functionality and the gene /cromosome construction of our problem 
+* for example :
+	* PSO_prb is used for bul pgiaa problem and so has the same structure of a gene in DNA(class for GA in bul pgiaa problem) but with added functionality 
+	* but n queens problem is used with the same parameters as bul pgia (called it DNA, should be changed ) but has a different gene/chromosome structure:	
+			
+			class NQueens_prb(DNA):
+			    def __init__(self):
+				parameters.__init__(self)
+		----->
+			    def create_object(self, target_size, target=None):
+				obj = random.sample(range(target_size), target_size)
+				while len(unique(obj)) != len(obj):
+				    obj = random.sample(range(target_size), target_size)
+				self.object = obj
+
+			    def character_creation(self, target_size):
+		---->		return random.randint(0, target_size - 1)
+
+
+### and to add an algorithem we just do some modifications on the basic algorithem class :
+* for example : Minimal_conflicts :
+
+
+		class Minimal_conflicts(algortithem):
+		    def __init__(self, target, tar_size, selection=None):
+			algortithem.__init__(self, target, tar_size, 0, NQueens_prb, NQUEENS, selection)
+			self.solution.create_object(tar_size)
+			# our fitness function that gets a conflict (fitness) value for a specific queen/ position
+			self.conflict = self.solution.fitnesstype[3]
+
+		    # get conflicts on queens based on there locations and return them as locations with  queen in row ,col  get its number of conflects with others
+		
+		----> changed stopage function
+		
+		    def stopage(self):
+			return self.solution.fitness == 0
+		
+		----> added functionality :
+		
+		
+		    def sorted_conflicts(self):
+			return [self.conflict(self.solution, self.solution.object[i], i) for i in range(self.target_size)]
+		    def select_pos(self, sorted_conflicts):
+			return choice([i for i in range(self.target_size) if sorted_conflicts[i]])
+
+		    def pos_min(self, sorted_conflicts):
+			return choice([i for i in range(self.target_size) if sorted_conflicts[i] == min(sorted_conflicts)])
+		
+		--->
+			changed algo implemetation for this specific function 
+		
+		    def algo(self, i):
+			sorted_conflicts = self.sorted_conflicts()
+			self.solution.fitness = sum(sorted_conflicts)
+			if not self.stopage():
+			    # get a position that has conflicts by random
+			    position = self.select_pos(sorted_conflicts)
+			    # choose based on min conflicts the correct queen
+			    chosen = self.pos_min([self.conflict(self.solution, i, position) for i in range(self.target_size)])
+			    # adapt the chosen to the solution
+			    self.solution.object[position] = chosen
+		
