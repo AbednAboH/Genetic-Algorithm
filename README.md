@@ -12,6 +12,14 @@ libraries: numpy,random,time,math
 * to select something press the number next to it then enter , in case of population size,number of queens ; put the number then press enter 
 
 
+# console structure:
+
+
+![image](https://user-images.githubusercontent.com/92520508/159179299-fe9dbd25-8121-452d-849f-c95e872b5693.png)
+
+
+
+
 # explenation of the structure of the code 
 
 ## created a class so that we can use it as a base class for all problem sets to come :
