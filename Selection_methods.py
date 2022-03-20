@@ -42,7 +42,7 @@ class selection_methods:
 
 
 
-    def tournement(self, population, fitness_array, k=15):
+    def tournement(self, population, fitness_array, k=25):
         # get samples from population
         participants1 = sample(population, k)
         participants2 = sample(population, k)

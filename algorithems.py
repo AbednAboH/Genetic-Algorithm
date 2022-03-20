@@ -26,6 +26,7 @@ class algortithem:
         self.sol_time = 0
         self.solution = problem_spec()
 
+
     def init_population(self):
         for i in range(self.pop_size):
             citizen = self.prob_spec()
@@ -83,6 +84,8 @@ class algortithem:
     def solve(self):
         self.handle_initial_time()
         self.init_population()
+        counter=0
+        prev=self.prob_spec()
         for i in range(GA_MAXITER):
             # self.file=open(rf"{i}.txt", "w+")
             # self.file.write("generation: " + str(self.iteration) + "\n")
@@ -95,6 +98,13 @@ class algortithem:
             self.get_levels_fitness()
 
             self.handle_prints_time()
+            # if self.solution==prev:
+            #     counter+=1
+            # else:
+            #     counter=0
+            # prev=self.solution
+            # if counter==20:
+            #     break
             if self.stopage():
                 break
             # self.file.close()

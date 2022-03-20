@@ -51,7 +51,7 @@ class fitness_selector:
         sumof = sum([hash_table[i] for i in object.object]) / capacity
 
         number_of_bins = len(object.bin_objects)
-        return abs(ceil(sumof*9/8)-number_of_bins)
-
+        #return abs(ceil(sumof*9/8)-number_of_bins)
+        return number_of_bins
     ## fitness for pso
 
