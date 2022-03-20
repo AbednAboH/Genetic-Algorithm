@@ -1,5 +1,17 @@
 # Ai_lab
 
+
+## # qualifications:
+
+python 3.9 version
+
+libraries: numpy,random,time,math
+
+# important note : main.exe is in dist file , to run make sure that bin_packing_prob file is in dist 
+# everything is in command line 
+# to select something press the number next to it then enter , in case of population size,number of queens ; put the number then press enter 
+
+
 ## the file Genetic.py contains python code taken from the file given by the teacher of this course 
 
 # updates are done here ! 
@@ -98,6 +110,7 @@
 	* in other words given a class of problems ,algorithem class creates all relevant fields based on the problem specific class , i.e creates population and calculates fitness based on it 
 
 ### by now we have all the tools that we need ,and the rest is history :P + make a way to select the mutaions , another tiny class would safice 
+
 
 
 
