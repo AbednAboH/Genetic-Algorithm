@@ -246,7 +246,7 @@ classes for algorithems :
 			class NQueens_prb(DNA):
 			    def __init__(self):
 				parameters.__init__(self)
-		----->
+			----->
 			    def create_object(self, target_size, target=None):
 				obj = random.sample(range(target_size), target_size)
 				while len(unique(obj)) != len(obj):
@@ -254,7 +254,7 @@ classes for algorithems :
 				self.object = obj
 
 			    def character_creation(self, target_size):
-		---->		return random.randint(0, target_size - 1)
+			---->	return random.randint(0, target_size - 1)
 
 
 ### and to add an algorithem we just do some modifications on the basic algorithem class :
