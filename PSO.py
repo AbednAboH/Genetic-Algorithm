@@ -10,7 +10,7 @@ class PSO_alg(algortithem):
         self.local_minima = problem_spec()
 
     def calc_fitness(self):
-
+        #finds local minima and global minima and places the values accordingly in the object itself 
         mean = 0
         for particle in self.population:
 
@@ -30,7 +30,7 @@ class PSO_alg(algortithem):
 
             mean += particle.fitness
         self.pop_mean = mean / self.pop_size
-
+    
     def algo(self, i):
         if i == 0:
             self.global_minima.object = self.population[0].object
