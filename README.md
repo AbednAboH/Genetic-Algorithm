@@ -17,7 +17,7 @@ libraries: numpy,random,time,math
 # updates are done here ! 
 	
 	* we can now work on the project on python ! 
-# updates !
+
 
 ## created a class so that we can use it as a base class for all problem sets to come :
 			
@@ -41,10 +41,14 @@ libraries: numpy,random,time,math
 				return self.fitness < other.fitness
 
 * we can now change the above functions for each problem and then just run the algorithem with it , without making changes in the genetic algorithem 
+* basically this class defines the parameters for each problem set , as it is expected to change it according to the problem 
+
+
 
 
 
 ## added class for cross function :
+
 	
 	class cross_types:
 	all of the functions below return 2 objects in the format of the problem
@@ -79,8 +83,11 @@ libraries: numpy,random,time,math
 		# writes fitness for the population in each generation 
 
 	    def solve(self):
-	    	# here the algorithem is implemented for each algorithem 
-		# might add a seperate function that handls time 
+	    	# here the basic structure of a solution is implemented for all algorithems to come 
+		# uses algo(i) where i is the generation number i or the "iteration" 
+		# uses stopage() function that stops the code , and is going to be different for each algorithem
+	  def algo(self,i):
+		here we write the algorithem that we want to implement 
 		
 ## fitness selector class has a dictionary with all fitness functions so that we can choose the one that we want when we use calculate fitness 
 	class fitness_selector:
@@ -109,8 +116,129 @@ libraries: numpy,random,time,math
 * we define an algoritem using an algorithem class that creates the population based on the problem above ,
 	* in other words given a class of problems ,algorithem class creates all relevant fields based on the problem specific class , i.e creates population and calculates fitness based on it 
 
-### by now we have all the tools that we need ,and the rest is history :P + make a way to select the mutaions , another tiny class would safice 
+
+# implemented classes : 
+ 
+ * the following classes help us to add more functions wothout changing our algorithems , we just have to add the function and give it a key :
+
+* this class gives us a select object that helps us select  the relevant mutate :
+
+	class mutations:
+
+	    def __init__(self):
+		self.select = {1: self.random_mutate, 2: self.swap_mutate, 3: self.insertion_mutate, BIN: self.distroy_mutate}
+
+	    def random_mutate(self, target_size, member, character_creation):
+
+	    def swap_mutate(self, target_size, member, character_creation):
+
+	    def insertion_mutate(self, target_size, member, character_creation):
 
 
+      
+* this class does the same thing as the class above but for selections: 
 
 
+		class selection_methods:
+	    # static propabilies list
+
+	    ranks = []
+
+	    def __init__(self):
+		self.method = {RAND: self.random_selection, SUS: self.SUS, RWS: self.RWS,
+			       TOUR: self.tournement}
+
+	   def random_selection(self, population, fitness_array, k=10):
+
+	   def SUS(self, population, fitness_array, k=10):
+
+	   def RWS(self, population, fitness_array, k=10):
+
+	    def tournement(self, population, fitness_array, k=25):
+
+	    def spin_the_rulette(self, population, mean):
+	    
+classes for algorithems : 
+
+* the Algorthim class mentioned above gives us basic fanctionality of population ,buffer and more , all the classes of the algorithems are based on it :
+
+
+* GA:
+* algo(self ,i) uses all the new functions in GA class to create a solution and updates the solution and is used in solver() from the father class algorithems
+* here we also see how we use cross_types class from above 
+* in contrast mutations class is used in a variation of the "citizen/cromosome"  class named parameters , and specifically in DNA class 
+* in this way we can create a new hybrid class from this one to make new modifications 
+
+		class genetic_algorithem(algortithem):
+		    def __init__(self, target, tar_size, pop_size, problem_spec, crosstype, fitnesstype, selection,
+				 serviving_mechanizem,mutation):
+			algortithem.__init__(self, target, tar_size, pop_size, problem_spec, fitnesstype, selection)
+			self.cross_func = cross_types().select[crosstype]		
+			self.serviving = serviving_mechanizem
+			self.mutation_type=mutation
+
+		    def mutate(self, member):
+			
+		    def age_based(self):
+
+		    def mate(self):
+
+		    def cross(self, esize):
+		    def algo(self, i):
+
+
+* DNA class :
+* here we see a classic example of using class mutate to spicify the mutation tye based on the object type 
+
+		class DNA(parameters):
+		    mutation = mutations()
+		    def __init__(self):
+			parameters.__init__(self)
+		    def create_object(self, target_size, target):
+			# for  a specific problem create the right objects 
+		    def character_creation(self, target_size):
+		    	# create the correct type of character in the cromosome
+			return chr((random.randint(0, 90)) + 32)
+
+		    def mutate(self, target_size, member, mutation_type):
+			self.mutation.select[mutation_type](target_size, member, self.character_creation)
+
+# pso class created to add more parameters to each cromosome so that pso algorithem can work with it 
+			class PSO_prb(DNA):
+			    # our object is the initial position , we added 2 parameters that are required
+			    def __init__(self):
+				DNA.__init__(self)
+				self.velocity = None
+				self.p_best = sys.maxsize
+				self.p_best_object = None
+
+			    def create_special_parameter(self, target_size):
+				self.create_velocity(target_size)
+
+			    def create_velocity(self, target_size):
+				self.velocity = [random.random() for i in range(target_size)]
+
+			    def calculate_new_position(self):
+				pos = ""
+				for i in range(len(self.object)):
+				    pos += chr((ord(self.object[i]) + int(self.velocity[i])) % 256)
+				self.object = pos
+
+			    def calculate_velocity(self, c1, c2, gl_best, w=0.5):
+				for i in range(len(self.object)):
+				    cc1 = c1 * (ord(self.p_best_object[i]) - ord(self.object[i])) * random.random()
+				    cc2 = c2 * (ord(gl_best[i]) - ord(self.object[i])) * random.random()
+				    self.velocity[i] = self.velocity[i] * w + cc1 + cc2
+
+			    def __eq__(self, other):
+				DNA.__eq__(self, other)
+				self.velocity = other.velocity
+				self.best_object = other.best_object
+
+			    def __str__(self):
+				if self.object == None:
+				    return ""
+				else:
+				    return super(PSO_prb, self).__str__()
+
+## i think that by now the logic is quite clear on how everything fits together 
