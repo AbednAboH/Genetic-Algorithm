@@ -1,4 +1,4 @@
-# Ai_lab
+# Genetic algorithm ,PSO,
 
 
 ## # qualifications:
