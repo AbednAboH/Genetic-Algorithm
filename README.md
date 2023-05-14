@@ -1,4 +1,4 @@
-# Genetic algorithm ,PSO,
+# Genetic algorithm ,PSO, Minimal Conflicts Algorithms
 
 
 ## # qualifications:
