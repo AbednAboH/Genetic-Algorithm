@@ -36,49 +36,42 @@ To configure and execute the program, follow the prompts provided in the console
 
 Here's a simplified diagram of the classes used in this code:
 
+### Parameters for all different algorithms
 
-    +----------------+        +----------------+        +----------------+
-    |   parameters   |        |   cross_types  |        |   algorithm   |
-    +----------------+        +----------------+        +----------------+
-    | - object       |        | - select       |        | - target      |
-    | - fitness      |        | - one_cross    |        | - target_size |
-    |                |        | - two_cross    |        | - pop_size    |
-    |                |        | - uniform_cross|        | - problem_spec|
-    |                |        |                |        | - fitnesstype |
-    +----------------+        +----------------+        +----------------+
-           |                        |                        |
-           |                        |                        |
-           |                        |                        |
-           v                        v                        v
-    +----------------+        +----------------+        +----------------+
-    | fitness_selector|       | DNA            |        | genetic_algorith|
-    +----------------+        +----------------+        +----------------+
-    | - select       |        | - mutation     |        | - target      |
-    | - distance_... |        | - create_obj.. |        | - tar_size    |
-    | - bul_pqia     |        | - character... |        | - crosstype   |
-    |                |        | - mutate       |        | - fitnesstype |
-    +----------------+        +----------------+        | - selection   |
-                                                        | - serviving..  |
-                                                        | - mutation_..  |
-                                                        +----------------+
-                                                               |
-                                                               |
-                                                               v
-                                                      +----------------+
-                                                      | PSO_prb        |
-                                                      +----------------+
-                                                      | - velocity     |
-                                                      | - p_best       |
-                                                      | - p_best_obj   |
-                                                      | - create_spec..|
-                                                      | - create_veloc..|
-                                                      | - calc_new_pos..|
-                                                      | - calc_veloci..|
-                                                      | - __eq__       |
-                                                      | - __str__      |
-                                                      +----------------+
+                        +----------------+                                      +----------------+
+                        |   parameters   |                                      |      bin       |
+                        +-------+--------+                                      +----------------+
+                                ^                                                       ^
+                                |                                                       |
+                        +----------------+                                      +----------------+ 
+                        |      DNA       |                                      | first_fit_prob |        
+                        +----------------+                                      +----------------+ 
+                               /|\
+            +--------+------------+--------------------------+
+            |        |            |                          |
+       +-------+   +-----------+ +----------------+   +-----------------------+     
+       |PSO_prb|   |NQueens_prb| |bin_packing_prob|   |hybrid_bin_packing_prob|
+       +-------+   +-----------+ +----------------+   +-----------------------+ 
+                                    |
+                            +----------------+ 
+                            |     bin_pack   |
+                            +----------------+ 
 
 
+### Algorithms
+
+
+                       
+                        +----------------+
+                        |   algorithm    |                                              
+                        +----------------+                                      
+                               /|\
+                    +----------+------------+
+                    |          |            |                          
+               +-------+   +-----------+ +-----------------+    
+               |   GA  |   |    PSO    | |Minimal Conflicts|   
+               +-------+   +-----------+ +-----------------+ 
+                               
 
 # Explanation of the Code Structure
 
@@ -109,21 +102,8 @@ class parameters:
 
 This class defines the parameters for each problem set, allowing customization without altering the genetic algorithm structure.
 
-## Class for Crossover Functions
-The `cross_types` class encapsulates different crossover methods for creating offspring from parent individuals:
-
-class cross_types:
-    # Different crossover functions return two objects in the format of the problem
-
-    def __init(self):
-        self.select = {1: self.one_cross, 2: self two_cross, 3: self uniform_cross}
-
-    def one_cross(self, citizen1, citizen2):
-        # Implement one-point crossover
-        return citizen1[0:spos] + citizen2[spos:target_size], citizen2[0:spos] + citizen1[spos:target_size]
-
 ## Base Class for Genetic Algorithms
-The `algorithm` class is a base class for all genetic algorithms. It provides core functionality and structure for genetic algorithm solutions:
+The `algorithm` class is a base class for all genetic algorithms and iteration based algorithms that use a population for analytical purposes. It provides core functionality and structure for genetic algorithm solutions:
 
 class algorithm:
     def __init__(self, target, target_size, pop_size, problem_spec, fitnesstype):
@@ -145,18 +125,40 @@ class algorithm:
         # Implement the basic structure of the solution for all algorithms
         # Uses the algo(i) function for each generation and a custom stoppage function
 
+
+## Class for Crossover Functions
+The `cross_types` class encapsulates different crossover methods for creating offspring from parent individuals:
+
+Crossing funcitons :
+- One Cross.
+- Two Cross.
+- Uniform Cross.
+- CX cross.
+- PMX cross.
+
 ## Fitness Selector Class
-The `fitness_selector` class provides a dictionary of fitness functions, allowing easy selection of the appropriate fitness function for each problem:
+The `fitness_selector` class provides a dictionary of fitness functions, allowing easy selection of the appropriate fitness function for each problem.
+including:
+- distance fittness.
+- Bulls and Cows fitness.
 
-class fitness_selector:
-    def __init__(self):
-        self.select = {0: self.distance_fitness, 1: self bul_pqia}
+## Mutation Class:
+The `mutations` class provides a dictionary of mutation functions ,allowing modular addition and selection of a mutation methode for each problem.
+including :
+- Random Mutate.
+- Swap Mutate.
+- Insertion Mutate.
+- 
+## Selection Methods:
+The `slection methods` class provides a dictionary of selection functions, in which the selection of the parents of the new generation of "genes" that are then crossed together and mutated.
 
-    def distance_fitness(self, object, target, target_size):
-        # Calculate fitness based on the distance metric
+including :
+- random selection.
+- SUS.
+- RWS.
+- Tornement (Rollete spin selection)
+- cross bins
 
-    def bul_pqia(self, object, target, target_size):
-        # Calculate fitness using a custom fitness function
 
 ## How It All Fits Together
 The code structure allows for modular customization. To use this framework for a specific problem:
